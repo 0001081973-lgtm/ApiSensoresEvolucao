@@ -5,7 +5,7 @@
 
 ---
 
-## 📖 Visão Geral
+## Visão Geral
 
 O SIMI é um sistema distribuído para monitoramento de sensores industriais em tempo real. O ecossistema é composto por quatro componentes principais que garantem a coleta, validação, persistência e visualização de dados críticos de telemetria.
 
@@ -18,26 +18,30 @@ O SIMI é um sistema distribuído para monitoramento de sensores industriais em 
 
 ---
 
-## 🏗️ Arquitetura e Fluxo de Dados
+## Arquitetura e Fluxo de Dados
 
 O sistema utiliza uma arquitetura cliente-servidor onde emissores alimentam uma base de dados centralizada, enquanto a interface de usuário consome esses dados para monitoramento.
+
+### Fluxo de Comunicação e Persistência
+
+```text
 ┌─────────────────┐         POST /api/v1/sensores        ┌─────────────────────┐
 │  SensorSimulator │ ──────────────────────────────────► │   ApiProcessamento  │
 │  (Console App)   │                                     │   (ASP.NET Web API) │
 │                  │  Persiste localmente em:            │                     │
 │  simulator_log.db│  simulator_log.db                   │   simi_sensores.db  │
 └─────────────────┘                                      │   (EF Core + SQLite) │
-└──────────┬──────────┘
+                                                         └──────────┬──────────┘
 ┌─────────────────┐          GET /api/v1/sensores           │
 │  SensorInterface │ ◄──────────────────────────────────────┘
 │  (WPF Desktop)   │
 │                  │  Persiste cache em:
 │  interface_log.db│  interface_log.db
-└─────────────────
+└─────────────────┘
 
 ---
 
-## 📉 Sinal Industrial Adicionado: Vibração (m/s²)
+## Sinal Industrial Adicionado: Vibração (m/s²)
 
 A inclusão do sinal de **Vibração** é fundamental para a estratégia de **Manutenção Preditiva**. Em máquinas rotativas (motores, bombas e ventiladores), o aumento da vibração é o primeiro indicador de falhas mecânicas.
 
@@ -54,7 +58,7 @@ A inclusão do sinal de **Vibração** é fundamental para a estratégia de **Ma
 
 ---
 
-## 🚀 Configuração e Execução
+## Configuração e Execução
 
 ### Pré-requisitos
 * [.NET 8 SDK]
@@ -89,7 +93,7 @@ A inclusão do sinal de **Vibração** é fundamental para a estratégia de **Ma
 
 ---
 
-## 🛠 Documentação da API (Endpoints)
+## Documentação da API (Endpoints)
 
 Base URL: `https://localhost:64813/api/v1/sensores`
 
@@ -109,7 +113,7 @@ Base URL: `https://localhost:64813/api/v1/sensores`
 Nesta seção, apresentamos a validação do fluxo completo de persistência, desde o envio dos dados até a gravação no banco SQLite.
 
 ### 1. Chamada do Endpoint via Swagger/Postman
-*(Insira aqui o print da requisição POST retornando status 200 OK)*
+*(Requisição POST retornando status 200 OK)*
 
 > ** <img width="1382" height="841" alt="POST_EVIDENCIA" src="https://github.com/user-attachments/assets/fb42058e-7431-4131-b75d-d2de4f70a990" /> **
 
@@ -120,7 +124,7 @@ Abaixo, a evidência dos dados salvos na tabela `Sensores` após o processamento
 
 ---
 
-## ⚙️ Configurações (`appsettings.json`)
+## Configurações (`appsettings.json`)
 
 Os limites de validação podem ser alterados sem recompilação:
 

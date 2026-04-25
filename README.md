@@ -24,7 +24,6 @@ O sistema utiliza uma arquitetura cliente-servidor onde emissores alimentam uma 
 
 ### Fluxo de Comunicação e Persistência
 
-```text
 ┌─────────────────┐         POST /api/v1/sensores        ┌─────────────────────┐
 │  SensorSimulator │ ──────────────────────────────────► │   ApiProcessamento  │
 │  (Console App)   │                                     │   (ASP.NET Web API) │
@@ -116,6 +115,7 @@ Nesta seção, apresentamos a validação do fluxo completo de persistência, de
 *(Requisição POST retornando status 200 OK)*
 
 > ** <img width="1382" height="841" alt="POST_EVIDENCIA" src="https://github.com/user-attachments/assets/fb42058e-7431-4131-b75d-d2de4f70a990" /> **
+
 
 ### 2. Persistência no Banco de Dados SQLite
 Abaixo, a evidência dos dados salvos na tabela `Sensores` após o processamento da API.

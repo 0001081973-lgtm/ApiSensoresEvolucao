@@ -1,0 +1,49 @@
+<Window x:Class="SensorInterface.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SensorInterface"
+        mc:Ignorable="d"
+        Title="SIMI - Monitoramento Industrial" Height="500" Width="850">
+
+    <StackPanel Margin="10">
+
+        <TextBlock Text="Sistema Integrado de Monitoramento Industrial"
+                   FontSize="16"
+                   FontWeight="Bold"
+                   Margin="0,0,0,10"/>
+
+        <Button Content="Atualizar"
+                Margin="6"
+                Command="{Binding CarregarSensoresCommand}"/>
+
+        <ListView Margin="6"
+                  Height="360"
+                  ItemsSource="{Binding Sensores}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ID" Width="50"
+                                    DisplayMemberBinding="{Binding Id}"/>
+                    <GridViewColumn Header="Temperatura (°C)" Width="130"
+                                    DisplayMemberBinding="{Binding Temperatura}"/>
+                    <GridViewColumn Header="Pressão (bar)" Width="110"
+                                    DisplayMemberBinding="{Binding Pressao}"/>
+                    <GridViewColumn Header="Umidade (%)" Width="100"
+                                    DisplayMemberBinding="{Binding Umidade}"/>
+                    <GridViewColumn Header="Vibração (m/s²)" Width="120"
+                                    DisplayMemberBinding="{Binding Vibracao}"/>
+                    <GridViewColumn Header="Origem" Width="90"
+                                    DisplayMemberBinding="{Binding Origem}"/>
+                    <GridViewColumn Header="Timestamp" Width="150"
+                                    DisplayMemberBinding="{Binding Timestamp}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <TextBlock Text="{Binding Status}"
+                   Margin="6,4,6,0"
+                   Foreground="Gray"/>
+
+    </StackPanel>
+</Window>

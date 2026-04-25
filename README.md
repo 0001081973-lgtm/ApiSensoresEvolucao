@@ -111,15 +111,12 @@ Nesta seção, apresentamos a validação do fluxo completo de persistência, de
 ### 1. Chamada do Endpoint via Swagger/Postman
 *(Insira aqui o print da requisição POST retornando status 200 OK)*
 
-> **[ESPAÇO PARA IMAGEM: PRINT DO SWAGGER![Uploading PERCISTENCIA_EMBANCO.png…]()
-<img width="1382" height="841" alt="POST_EVIDENCIA" src="https://github.com/user-attachments/assets/fb42058e-7431-4131-b75d-d2de4f70a990" />
-]**
+> ** <img width="1382" height="841" alt="POST_EVIDENCIA" src="https://github.com/user-attachments/assets/fb42058e-7431-4131-b75d-d2de4f70a990" /> **
 
 ### 2. Persistência no Banco de Dados SQLite
 Abaixo, a evidência dos dados salvos na tabela `Sensores` após o processamento da API.
 
-> **[![Uploading PERCISTENCIA_EMBANCO.png…]()
-ESPAÇO PARA IMAGEM: PRINT DO BANCO DE DADOS ABERTO NO SQLITE BROWSER]**
+> ** <img width="955" height="647" alt="PERCISTENCIA_EMBANCO" src="https://github.com/user-attachments/assets/74f4a5f7-f4ca-41f4-bde8-51a74828106d" /> **
 
 ---
 

@@ -24,6 +24,7 @@ O sistema utiliza uma arquitetura cliente-servidor onde emissores alimentam uma 
 
 ### Fluxo de Comunicação e Persistência
 
+```text
 ┌─────────────────┐         POST /api/v1/sensores        ┌─────────────────────┐
 │  SensorSimulator │ ──────────────────────────────────► │   ApiProcessamento  │
 │  (Console App)   │                                     │   (ASP.NET Web API) │
@@ -37,7 +38,7 @@ O sistema utiliza uma arquitetura cliente-servidor onde emissores alimentam uma 
 │                  │  Persiste cache em:
 │  interface_log.db│  interface_log.db
 └─────────────────┘
-
+```
 ---
 
 ## Sinal Industrial Adicionado: Vibração (m/s²)

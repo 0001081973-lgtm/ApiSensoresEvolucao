@@ -1,72 +1,137 @@
-# SIMI - Sistema Integrado de Monitoramento Industrial
+# SIMI — Sistema Integrado de Monitoramento Industrial
 
-Projeto desenvolvido para a disciplina de sistemas distribuídos.
-O sistema é composto por uma API, um simulador de sensores e uma interface desktop para visualização dos dados.
+> **Atividade:** Documentação, Persistência e Publicação de API de Sensores  
+> **Tecnologias:** .NET 8 · ASP.NET Core Web API · Entity Framework Core · SQLite · WPF · Swagger/OpenAPI
 
-## Tecnologias utilizadas
+---
 
-- .NET 8
-- ASP.NET Core Web API
-- Entity Framework Core com SQLite
-- WPF (Windows Presentation Foundation)
-- Swagger para documentação da API
+## 📖 Visão Geral
 
-## Estrutura do projeto
+O SIMI é um sistema distribuído para monitoramento de sensores industriais em tempo real. O ecossistema é composto por quatro componentes principais que garantem a coleta, validação, persistência e visualização de dados críticos de telemetria.
 
-```
-SIMI/
-├── Shared/              -> modelo de dados compartilhado entre os projetos
-├── ApiProcessamento/    -> API que recebe e salva os dados dos sensores
-├── SensorSimulator/     -> simula sensores enviando dados para a API
-└── SensorInterface/     -> interface WPF para visualizar os dados
-```
+| Componente | Tipo | Descrição |
+|---|---|---|
+| `Shared` | Class Library | Modelo de dados compartilhado (`SensorData`) entre todos os projetos. |
+| `ApiProcessamento` | ASP.NET Web API | Core do sistema: valida limites técnicos, atribui timestamps e persiste dados. |
+| `SensorSimulator` | Console App | Simula o hardware industrial, enviando dados para a API a cada 2 segundos. |
+| `SensorInterface` | WPF Desktop App | Dashboard para visualização e consulta histórica dos dados processados. |
 
-## Como executar
+---
 
-**1. Iniciar a API**
-```
-cd ApiProcessamento
-dotnet run
-```
-O banco de dados SQLite (`simi_sensores.db`) é criado automaticamente na primeira execução.
-O Swagger fica disponível em: `https://localhost:7205/swagger`
+## 🏗️ Arquitetura e Fluxo de Dados
 
-**2. Iniciar o Simulador** (em outro terminal)
-```
-cd SensorSimulator
-dotnet run
-```
-Os dados ficam salvos também em `simulator_log.db` localmente.
+O sistema utiliza uma arquitetura cliente-servidor onde emissores alimentam uma base de dados centralizada, enquanto a interface de usuário consome esses dados para monitoramento.
+┌─────────────────┐         POST /api/v1/sensores        ┌─────────────────────┐
+│  SensorSimulator │ ──────────────────────────────────► │   ApiProcessamento  │
+│  (Console App)   │                                     │   (ASP.NET Web API) │
+│                  │  Persiste localmente em:            │                     │
+│  simulator_log.db│  simulator_log.db                   │   simi_sensores.db  │
+└─────────────────┘                                      │   (EF Core + SQLite) │
+└──────────┬──────────┘
+┌─────────────────┐          GET /api/v1/sensores           │
+│  SensorInterface │ ◄──────────────────────────────────────┘
+│  (WPF Desktop)   │
+│                  │  Persiste cache em:
+│  interface_log.db│  interface_log.db
+└─────────────────
 
-**3. Abrir a Interface** (Windows)
-```
-cd SensorInterface
-dotnet run
-```
-Clique em "Atualizar" para carregar os dados da API. Os dados são salvos em `interface_log.db`.
+---
 
-## Sinal industrial adicionado
+## 📉 Sinal Industrial Adicionado: Vibração (m/s²)
 
-Foi adicionado o sinal de **Vibração (m/s²)** ao conjunto de sensores.
+A inclusão do sinal de **Vibração** é fundamental para a estratégia de **Manutenção Preditiva**. Em máquinas rotativas (motores, bombas e ventiladores), o aumento da vibração é o primeiro indicador de falhas mecânicas.
 
-A vibração é importante para monitorar maquinas rotativas como motores e bombas. Com ela é possivel identificar problemas como desbalanceamento ou desgaste antes que causem falha no equipamento. O limite configurado é de 50 m/s².
+* **Finalidade:** Identificar desbalanceamento, desalinhamento de eixos e desgaste de rolamentos.
+* **Limite Máximo:** 50 m/s² (Configurável via `appsettings.json`).
+* **Justificativa:** Prevenção de paradas não programadas.
 
-## Sinais monitorados
-
-| Sinal | Unidade | Limite máximo |
+| Sinal | Unidade | Limite Máximo |
 |---|---|---|
 | Temperatura | °C | 80 |
 | Pressão | bar | 10 |
 | Umidade | % | - |
 | Vibração | m/s² | 50 |
 
-## Endpoints da API
+---
+
+## 🚀 Configuração e Execução
+
+### Pré-requisitos
+* [.NET 8 SDK]
+* Visual Studio 2022
+
+### Passo a Passo
+
+1.  **Clone o repositório:**
+    ```bash
+    git clone (https://github.com/0001081973-lgtm/ApiSensorIOT)
+    cd SIMI
+    ```
+
+2.  **Inicie a API (Terminal 1):**
+    ```bash
+    cd ApiProcessamento
+    dotnet run
+    ```
+    *A API criará o banco `simi_sensores.db` automaticamente. 
+
+3.  **Inicie o Simulador (Terminal 2):**
+    ```bash
+    cd SensorSimulator
+    dotnet run
+    ```
+
+4.  **Inicie a Interface WPF (Terminal 3):**
+    ```bash
+    cd SensorInterface
+    dotnet run
+    ```
+
+---
+
+## 🛠 Documentação da API (Endpoints)
+
+Base URL: `https://localhost:64813/api/v1/sensores`
 
 | Método | Rota | Descrição |
 |---|---|---|
-| POST | /api/v1/sensores | envia um novo dado de sensor |
-| GET | /api/v1/sensores | lista todos os dados |
-| GET | /api/v1/sensores/{id} | busca por id |
-| GET | /api/v1/sensores/origem/{origem} | filtra por origem |
-| GET | /api/v1/sensores/ultimo | retorna o ultimo registro |
-| DELETE | /api/v1/sensores/{id} | deleta um registro |
+| **POST** | `/` | Recebe e valida dados. Salva com Timestamp atual. |
+| **GET** | `/` | Lista todos os registros do banco de dados. |
+| **GET** | `/{id}` | Busca um registro específico por ID. |
+| **GET** | `/origem/{origem}` | Filtra registros por origem (Ex: `Simulator`). |
+| **GET** | `/ultimo` | Retorna o registro mais recente (maior timestamp). |
+| **DELETE** | `/{id}` | Remove um registro permanentemente. |
+
+---
+
+##  Evidências de Persistência (Método POST)
+
+Nesta seção, apresentamos a validação do fluxo completo de persistência, desde o envio dos dados até a gravação no banco SQLite.
+
+### 1. Chamada do Endpoint via Swagger/Postman
+*(Insira aqui o print da requisição POST retornando status 200 OK)*
+
+> **[ESPAÇO PARA IMAGEM: PRINT DO SWAGGER![Uploading PERCISTENCIA_EMBANCO.png…]()
+<img width="1382" height="841" alt="POST_EVIDENCIA" src="https://github.com/user-attachments/assets/fb42058e-7431-4131-b75d-d2de4f70a990" />
+]**
+
+### 2. Persistência no Banco de Dados SQLite
+Abaixo, a evidência dos dados salvos na tabela `Sensores` após o processamento da API.
+
+> **[![Uploading PERCISTENCIA_EMBANCO.png…]()
+ESPAÇO PARA IMAGEM: PRINT DO BANCO DE DADOS ABERTO NO SQLITE BROWSER]**
+
+---
+
+## ⚙️ Configurações (`appsettings.json`)
+
+Os limites de validação podem ser alterados sem recompilação:
+
+```json
+{
+  "ApiConfig": {
+    "MaxTemperatura": 80,
+    "MaxPressao": 10,
+    "MaxVibracao": 50
+  }
+}
